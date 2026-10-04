@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Resizer </title>
+   
+<style>
+body{   
+
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='200' height='150'><text x='20' y='60' transform='rotate(-20, 20, 60)' fill='rgba(0, 0, 0, 0.05)' font-size='12' font-family='sans-serif'>porkodiBritto</text></svg>");
+background-attachment:fixed;
+background-repeat: repeat;
+}
+
+.menu
+ {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  }
+.menu
+li {
+  float: left;
+}
+.menu
+li a {
+  display: inline-block;
+  color: black;
+
+  text-align: center;
+  padding: 14px;
+
+}
+.menu
+li a:hover
+{
+color:#255784;
+background:red;
+box-shadow:0 0 5px #2196f3, 0 0 20px #2196f3, 0 0 40px #2196f3;
+transition-delay:.5s;
+}
+
+
+</style>
+</head>
+<body>
+
+  <ul class="menu">
+       
+     
+    </ul>
+
+    <style>
+  
+         /* Base page layout using Flexbox to place side-by-side if there is enough room */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Card Container 2: Flexible height/width with light green background */
+        .card-2 {
+            flex: 1;
+
+            width: 100vw;
+            height: 100vh;
+            background-color: #90EE90; /* Light Green */
+	          border: 1px solid #ffb6c1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            flex: 1;     /* Grows and shrinks to fill available space */
+            min-width: 0;/* CRITICAL: Allows the flex item to shrink smaller than its text content */
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group label {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 5px;
+            user-select: none;
+            font-weight: bold;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        input[type="text"] {
+            min-width: 0;
+            padding: 6px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #e9e9e9; /* Light gray to look read-only */
+        }
+        input[type="number"] {
+            min-width: 0;
+            padding: 6px;
+            border: 1px solid #aac4a9;
+            border-radius: 4px;
+        }
+
+        input[type="number"]:disabled {
+            background-color: #f1f5f1;
+            cursor: not-allowed;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:disabled {
+            background-color: #cccccc !important;
+            color: #666666;
+            cursor: not-allowed;
+        }
+
+        #resizeBtn {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        /* Distinctive Green Download Button */
+        #downloadBtn {
+            background-color: #4caf50;
+            color: white;
+            display: none;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        #downloadBtn:hover {
+            background-color: #43a047;
+        }
+    </style>
+
+
+    <!-- Card Container 2 (Image Resizer) -->
+    <div class="card-2">
+        <h3 style="font-size: 5vw;">Quality Image Resizer by File Size</h3>
+	<p>  </p>
+        <h4 style="font-size: 2vw;">   please enter value little more than the file size you need </h4>
+        
+        <!-- Only image formats accepted -->
+        <div style="font-size: 3vw;" class="form-group">
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+    <div style="font-size: 3vw;" class="form-group">
+        <label style="font-size: 3vw;" for="textbox1">The File Size :</label>
+        <!-- Textbox 1 to display File Size -->
+        <input style="font-size: 3vw;" type="text" id="textbox1" placeholder="Size will appear here..." readonly>
+    </div>
+        <!-- Controls for Target Size -->
+        <div style="font-size: 3vw;" class="form-group">
+            <label style="font-size: 3vw;"><input type="checkbox" id="chkKB" disabled> IN KB</label>
+            <input type="number" id="txtKB" placeholder="50 - 1024" disabled>
+        </div>
+
+        <div style="font-size: 3vw;" class="form-group">
+            <label style="font-size: 3vw;"><input type="checkbox" id="chkMB" disabled> IN MB</label>
+            <input type="number" id="txtMB" placeholder="1 - 100" disabled>
+        </div>
+
+        <!-- Action Processing Buttons -->
+        <button style="font-size: 4vw;", id="resizeBtn" disabled>Resize Image</button>
+        <div>
+            <button style="font-size: 4vw;", id="downloadBtn">Download Resized Image</button>
+        </div>
+    </div>
+
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const textbox = document.getElementById('textbox1');
+    const chkKB = document.getElementById('chkKB');
+    const txtKB = document.getElementById('txtKB');
+    const chkMB = document.getElementById('chkMB');
+    const txtMB = document.getElementById('txtMB');
+    const resizeBtn = document.getElementById('resizeBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let originalFile = null;
+    let resizedBlob = null;
+
+    // Reset workspace completely back to disabled/empty state
+    function clearAndDisableAll() {
+        imageInput.value = '';
+        originalFile = null;
+        resizedBlob = null;
+        textbox.value = "";
+        chkKB.checked = false;
+        chkKB.disabled = true;
+        txtKB.value = '';
+        txtKB.disabled = true;
+
+        chkMB.checked = false;
+        chkMB.disabled = true;
+        txtMB.value = '';
+        txtMB.disabled = true;
+
+        resizeBtn.disabled = true;
+        downloadBtn.style.display = 'none';
+    }
+
+    // Reset immediately whenever file input button is clicked
+    imageInput.addEventListener('click', function() {
+        clearAndDisableAll();
+    });
+    imageInput.addEventListener('change', function(event) {
+        const imageInput = event.target;
+        const textbox = document.getElementById('textbox1');
+
+        // Verify if a file is actually selected
+        if (imageInput.files.length > 0) {
+            const file = imageInput.files[0];
+            const sizeInBytes = file.size; // Browser reads native size in bytes
+
+            // Perform mathematical conversion (divide by 1024)
+            const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+            const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
+
+            // Output the formatted string inside Textbox 1
+            textbox.value = `${sizeInKB} KB / ${sizeInMB} MB`;
+        } else {
+            // Clear textbox if no file is selected
+            textbox.value = '';
+        }
+    });
+    // Fire state triggers when an image selection finishes
+    imageInput.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            originalFile = e.target.files[0];
+            
+            chkKB.disabled = false;
+            chkMB.disabled = false;
+            //resizeBtn.disabled = false;
+        }
+    });
+
+    // Checkbox toggling behaviors
+    chkKB.addEventListener('change', function() {
+        if (this.checked) {
+            txtKB.disabled = false;
+            chkMB.checked = false;
+            txtMB.disabled = true;
+            txtMB.value = '';
+
+        } else {
+            txtKB.disabled = true;
+            txtKB.value = '';
+
+        }
+	toggleButton1();
+
+    });
+
+    chkMB.addEventListener('change', function() {
+        if (this.checked) {
+            txtMB.disabled = false;
+            chkKB.checked = false;
+            txtKB.disabled = true;
+            txtKB.value = '';
+	    
+        } else {
+            txtMB.disabled = true;
+            txtMB.value = '';
+	    
+        }
+	toggleButton1();
+    });
+        // Function to check input values and toggle the button
+        function toggleButton1() {
+            // .trim() removes empty whitespace spaces
+            const hasValue1 = txtKB.value.trim() !== "";
+            const hasValue2 = txtMB.value.trim() !== "";
+
+            // Enable button if textbox 1 OR textbox 2 has an input value
+            resizeBtn.disabled = !(hasValue1 || hasValue2);
+        }
+
+        // Attach event listeners to track real-time user typing
+        txtKB.addEventListener('input', toggleButton1);
+        txtMB.addEventListener('input', toggleButton1);
+
+    // Process High-Quality Image Resizing 
+    resizeBtn.addEventListener('click', function() {
+        if (!originalFile) return;
+
+        // 1. Immediately lock down input fields
+        chkKB.disabled = true;
+        txtKB.disabled = true;
+        chkMB.disabled = true;
+        txtMB.disabled = true;
+        resizeBtn.disabled = true;
+
+        let targetSizeInBytes = 0;
+
+        // 2. Validate thresholds and balance conditions
+        if (chkKB.checked) {
+            let val = parseInt(txtKB.value) || 0;
+            if (val < 50) val = 50;
+            if (val > 1024) val = 1024;
+            txtKB.value = val;
+            targetSizeInBytes = val * 1024;
+        } else if (chkMB.checked) {
+            let val = parseInt(txtMB.value) || 0;
+            if (val < 1) val = 50; // Set to 50 if below 1 or negative per rule
+            if (val > 100) val = 100;
+            txtMB.value = val;
+            targetSizeInBytes = val * 1024 * 1024;
+        } else {
+            alert('Please select a target checkbox.');
+            chkKB.disabled = false;
+            chkMB.disabled = false;
+            resizeBtn.disabled = false;
+            return;
+        }
+
+        // 3. Process image conversion logic
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                // Predictive High-Quality Dimension Scaling
+                // If original format can't reach high file sizes naturally, dimension padding is applied safely
+                let scaleFactor = 1.0;
+                
+                // Approximate expected output weight vs current weight to find initial scaling bounds
+                if (originalFile.size < targetSizeInBytes) {
+                    scaleFactor = Math.sqrt(targetSizeInBytes / originalFile.size) * 1.1; 
+                } else {
+                    scaleFactor = Math.sqrt(targetSizeInBytes / originalFile.size) * 0.95;
+                }
+
+                // Protect boundaries against extreme resizing calculations
+                scaleFactor = Math.max(0.1, Math.min(scaleFactor, 4.0));
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = img.width * scaleFactor;
+                canvas.height = img.height * scaleFactor;
+                
+                // Configure smooth scale smoothing options
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // Smart loop to converge quality variables onto the target size
+                let quality = 0.85;
+                let steps = 5;
+
+                function adjustQualityLoop() {
+                    canvas.toBlob(function(blob) {
+                        resizedBlob = blob;
+                        steps--;
+
+                        if (steps > 0) {
+                            // Scale optimization direction logic
+                            if (blob.size > targetSizeInBytes) {
+                                quality = Math.max(0.1, quality - 0.12);
+                            } else if (blob.size < targetSizeInBytes * 0.85) {
+                                quality = Math.min(1.0, quality + 0.08);
+                            }
+                            adjustQualityLoop();
+                        } else {
+                            // Finish and reveal the download step
+                            downloadBtn.style.display = 'block';
+                        }
+                    }, originalFile.type, quality);
+                }
+
+                adjustQualityLoop();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(originalFile);
+    });
+
+    // Trigger File Download Action and Clean State Layout
+    downloadBtn.addEventListener('click', function() {
+        if (!resizedBlob || !originalFile) return;
+
+        const lastDotIndex = originalFile.name.lastIndexOf('.');
+        let nameWithoutExt = originalFile.name;
+        let ext = '';
+        
+        if (lastDotIndex !== -1) {
+            nameWithoutExt = originalFile.name.substring(0, lastDotIndex);
+            ext = originalFile.name.substring(lastDotIndex);
+        }
+        
+        const outputFilename = `${nameWithoutExt}_resized_img${ext}`;
+
+        // Create download link element anchor
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(resizedBlob);
+        link.download = outputFilename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Auto clean-up UI states following successful export activity
+        clearAndDisableAll();
+    });
+</script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f6f9;
+        }
+        /* Flexible Card Container with Light Sky Blue Background */
+        .card-container {
+            flex: 1;
+
+            width: 100vw;
+            min-height: 100vh;
+            background-color: #87CEFA; /* Light Sky Blue */
+	          border: 1px solid #ffb6c1;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+            box-sizing: border-box;
+        }
+        .card-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        .control-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #222;
+        }
+        input[type="file"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="number"]:disabled {
+            background-color: rgba(233, 233, 233, 0.6);
+            cursor: not-allowed;
+        }
+        .checkbox-group {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .checkbox-group label {
+            display: inline-block;
+            margin-right: 12px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        .action-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 4vw;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .action-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        /* Green Download Button */
+        #downloadBtnp {
+            display: none;
+            width: auto;
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 4vw;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+        #downloadBtnp:hover {
+            background-color: #218838;
+        }
+    </style>
+
+
+    <div class="card-container">
+        <h2 style="font-size: 5vw;", class="card-title">Image Resizer By Percentage </h2>
+
+        <!-- Input accepts only image file format -->
+        <div style="font-size: 4vw;" class="control-group">
+            <label style="font-size: 4vw;", for="imageInputp">Select Image:</label>
+            <input type="file" id="imageInputp" accept="image/*">
+        </div>
+
+        <!-- Textbox enabled after input -->
+        <div style="font-size: 4vw;" class="control-group">
+            <label style="font-size: 3vw;" for="resizePercentage">Resize Percentage (10 - 100):</label>
+            <input type="number" id="resizePercentage" disabled placeholder="Enter whole number">
+        </div>
+
+        <!-- Format selection with checkboxes -->
+        <div style="font-size: 4vw;" class="control-group">
+            <label style="font-size: 3vw;">Output Format (Optional):</label>
+            <div class="checkbox-group">
+                <label style="font-size: 3vw;"><input type="checkbox" class="format-checkbox" value="image/jpeg"> JPEG</label>
+                <label style="font-size: 3vw;"><input type="checkbox" class="format-checkbox" value="image/png"> PNG</label>
+                <label style="font-size: 3vw;"><input type="checkbox" class="format-checkbox" value="image/webp"> WEBP</label>
+            </div>
+        </div>
+
+        <div style="font-size: 4vw;" class="control-group">
+            <button style="font-size: 3vw;", id="convertBtn" class="action-btn" disabled>Convert</button>
+        </div>
+
+        <!-- Green download button hidden by default -->
+        <button style="font-size: 3vw;", id="downloadBtnp">Download Resized Image</button>
+    </div>
+
+    <script>
+        const imageInputp = document.getElementById('imageInputp');
+        const resizePercentage = document.getElementById('resizePercentage');
+        const checkboxes = document.querySelectorAll('.format-checkbox');
+        const convertBtn = document.getElementById('convertBtn');
+        const downloadBtnp = document.getElementById('downloadBtnp');
+
+        let originalFilep = null;
+        let selectedFormat = null;
+        let downloadUrlp = null;
+        let outputFileNamep = "";
+
+        // Triggered whenever the choose image button is clicked
+        imageInputp.addEventListener('click', () => {
+            resetFormStatep();
+        });
+
+        // Triggered when a new file selection completes
+        imageInputp.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                originalFilep = e.target.files[0];
+                resizePercentage.disabled = false;
+                convertBtn.disabled = false;
+                selectedFormat = originalFilep.type; 
+            } else {
+                resetFormStatep();
+            }
+        });
+
+        // Exclusive checkbox selectors logic
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    checkboxes.forEach(cb => { if (cb !== this) cb.checked = false; });
+                    selectedFormat = this.value;
+                } else {
+                    selectedFormat = originalFilep ? originalFilep.type : null;
+                }
+            });
+        });
+
+        // Sequence validation logic
+        function runValidationSequence(value) {
+            let num = parseFloat(value);
+            
+            if (isNaN(num)) num = 100; // Fallback safely if input empty
+
+            // 1. Initial boundary checks
+            if (num < 10) num = 10;
+            if (num > 100) num = 100;
+
+            // 2. Fractional logic: Round up to nearest whole number
+            if (num % 1 !== 0) {
+                num = Math.ceil(num);
+            }
+
+            // 3. Final validation against condition bounds
+            if (num < 10) num = 10;
+            if (num > 100) num = 100;
+
+            return num;
+        }
+
+        convertBtn.addEventListener('click', () => {
+            if (!originalFilep) return;
+
+            // Step 1: Immediately disable the textbox
+            resizePercentage.disabled = true;
+
+            // Step 2: Run mathematical parsing boundaries and update text display
+            const finalPercentage = runValidationSequence(resizePercentage.value);
+            resizePercentage.value = finalPercentage;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const scaleFactor = finalPercentage / 100;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width * scaleFactor;
+                    canvas.height = img.height * scaleFactor;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Filename building pattern: input file name + resize
+                    const lastDotIndex = originalFilep.name.lastIndexOf('.');
+                    const nameWithoutExtension = lastDotIndex !== -1 ? originalFilep.name.substring(0, lastDotIndex) : originalFilep.name;
+                    
+                    let extension = originalFilep.name.substring(lastDotIndex);
+                    if (selectedFormat === 'image/jpeg') extension = '.jpg';
+                    if (selectedFormat === 'image/png') extension = '.png';
+                    if (selectedFormat === 'image/webp') extension = '.webp';
+
+                    outputFileNamep = `${nameWithoutExtension}resize${extension}`;
+                    downloadUrlp = canvas.toDataURL(selectedFormat);
+
+                    // Reveal green download element
+                    downloadBtnp.style.display = 'block';
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(originalFilep);
+        });
+
+        // Download event and full reset route
+        downloadBtnp.addEventListener('click', () => {
+            if (!downloadUrlp) return;
+            
+            const link = document.createElement('a');
+            link.href = downloadUrlp;
+            link.download = outputFileNamep;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Clear input, clear & disable textbox, disappear download button
+            resetFormStatep();
+            imageInputp.value = ""; // Also wipe the file path selector completely
+        });
+
+        // Master UI field state reset function
+        function resetFormStatep() {
+	    imageInputp.value = "";
+            resizePercentage.value = "";
+            resizePercentage.disabled = true;
+            convertBtn.disabled = true;
+            downloadBtnp.style.display = 'none';
+            checkboxes.forEach(cb => cb.checked = false);
+            originalFilep = null;
+            selectedFormat = null;
+            downloadUrlp = null;
+            outputFileNamep = "";
+        }
+    </script>
+
+    <style>
+         /* Base page layout using Flexbox to place side-by-side if there is enough room */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+
+        .container3 {
+            flex: 1;
+
+            width: 100vw;          /* Full width of the viewport screen */
+            height: 100vh;     /* Full height of the viewport screen */
+
+            background-color: #ffe4e1; /* Light Pink */
+            border: 1px solid #ffb6c1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+
+        }
+        .download-counter {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-weight: bold;
+            color: #d11a5b;
+            font-size: 14px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .info-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        input[type="number"], input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: auto;
+            box-sizing: border-box;
+        }
+        input[type="number"]:disabled {
+            background-color: #e9e9e9;
+            cursor: not-allowed;
+        }
+        .inline-input {
+            width: 50px!important;
+        }
+        button {
+            width: auto;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 4vw;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #btnStart {
+            background-color: #007bff;
+            color: white;
+        }
+        #btnStart:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #btn24 {
+            background-color: #28a745;
+            color: white;
+            margin-top: 15px;
+            display: none;
+        }
+        #btn24:hover {
+            background-color: #218838;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+
+<div class="container3">
+   
+    <h2 style="font-size: 5vw;">Image Resizer by Pixels or by DPI</h2>
+    
+    <!-- File Input -->
+    <div style="font-size: 4vw;" class="form-group">
+        <label style="font-size: 4vw;" for="imageInput3">Choose Image:</label>
+        <input type="file" id="imageInput3" accept="image/*">
+    </div>
+
+    <!-- Original Dimensions Display -->
+    <div style="font-size: 4vw;" class="info-text">
+        Original Width: <span id="txtw">-</span> px | Original Height: <span id="txth">-</span> px
+    </div>
+
+    <!-- Pixel Options -->
+    <div style="font-size: 4vw;" class="row">
+        <div class="checkbox-container">
+            <input style="font-size: 3vw;" type="radio" id="chkp" name="resizeType" disabled>
+            <label style="font-size: 4vw;" for="chkp">Resize by Pixels</label>
+        </div>
+        <input style="font-size: 3vw;" type="number" id="txtuw" class="inline-input" placeholder="W" disabled min="16" max="90001">
+        <input style="font-size: 3vw;" type="number" id="txtuh" class="inline-input" placeholder="H" disabled min="16" max="90001">
+    </div>
+
+    <!-- DPI Options -->
+    <div class="row">
+        <div class="checkbox-container">
+            <input style="font-size: 3vw;" type="radio" id="chkdpi" name="resizeType" disabled>
+            <label style="font-size: 3vw;" for="chkdpi">Resize by DPI</label>
+        </div>
+        <input style="font-size: 3vw;" type="number" id="txtdpi" class="inline-input" placeholder="DPI" disabled min="30" max="550">
+    </div>
+
+    <!-- Action Buttons -->
+    <button style="font-size: 4vw;" type="button" id="btnStart" disabled>Start Resize</button>
+    <button style="font-size: 4vw;" type="button" id="btn24">Download Resized Image</button>
+</div>
+
+<script>
+    // DOM Elements
+    const imageInput3 = document.getElementById('imageInput3');
+    const txtw = document.getElementById('txtw');
+    const txth = document.getElementById('txth');
+    const chkp = document.getElementById('chkp');
+    const chkdpi = document.getElementById('chkdpi');
+    const txtuw = document.getElementById('txtuw');
+    const txtuh = document.getElementById('txtuh');
+    const txtdpi = document.getElementById('txtdpi');
+    const btnStart = document.getElementById('btnStart');
+    const btn24 = document.getElementById('btn24');
+
+    let loadedImage = null;
+    let fileMetadata = { name: '', type: '', ext: '' };
+    let processedBlobUrl = null;
+
+    // Reset workflow data
+    function clearData() {
+        txtw.textContent = '-';
+        txth.textContent = '-';
+        
+        chkp.checked = false;
+        chkp.disabled = true;
+        chkdpi.checked = false;
+        chkdpi.disabled = true;
+
+        txtuw.value = '';
+        txtuw.disabled = true;
+        txtuh.value = '';
+        txtuh.disabled = true;
+        txtdpi.value = '';
+        txtdpi.disabled = true;
+
+        btnStart.disabled = true;
+        btn24.style.display = 'none';
+        
+        loadedImage = null;
+        if (processedBlobUrl) {
+            URL.revokeObjectURL(processedBlobUrl);
+            processedBlobUrl = null;
+        }
+    }
+
+    // Trigger clear on click before file selection finishes
+    imageInput3.addEventListener('click', () => {
+        clearData();
+    });
+
+    // Handle File Selection
+    imageInput3.addEventListener('change', (e) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+        
+        const file = files[0];
+
+        // Safely extract names and extensions
+        fileMetadata.name = file.name.substring(0, file.name.lastIndexOf('.'));
+        fileMetadata.ext = file.name.substring(file.name.lastIndexOf('.'));
+        fileMetadata.type = file.type;
+
+        // Use standard ObjectURL instead of FileReader for reliable element sizing
+        const img = new Image();
+        img.onload = function() {
+            loadedImage = img;
+            
+            // Explicitly map properties into elements
+            txtw.textContent = img.naturalWidth || img.width;
+            txth.textContent = img.naturalHeight || img.height;
+
+            // Enable checkboxes
+            chkp.disabled = false;
+            chkdpi.disabled = false;
+            
+            // Default pick Pixels option automatically
+            chkp.checked = true;
+            handleToggleLogic();
+        };
+        img.src = URL.createObjectURL(file);
+    });
+
+    // Toggle Input States based on selection
+    function handleToggleLogic() {
+        if (chkp.checked) {
+            txtuw.disabled = false;
+            txtuh.disabled = false;
+            txtdpi.disabled = true;
+            txtdpi.value = '';
+        } else if (chkdpi.checked) {
+            txtdpi.disabled = false;
+            txtuw.disabled = true;
+            txtuh.disabled = true;
+            txtuw.value = '';
+            txtuh.value = '';
+        }
+        validateInputs();
+    }
+
+    chkp.addEventListener('change', handleToggleLogic);
+    chkdpi.addEventListener('change', handleToggleLogic);
+    txtuw.addEventListener('input', validateInputs);
+    txtuh.addEventListener('input', validateInputs);
+    txtdpi.addEventListener('input', validateInputs);
+
+    // Dynamic verification to enable Start Button
+    function validateInputs() {
+        if (chkp.checked) {
+            const w = txtuw.value;
+            const h = txtuh.value;
+            btnStart.disabled = !(w && h && w >= 16 && w <= 90001 && h >= 16 && h <= 90001);
+        } else if (chkdpi.checked) {
+            const dpi = txtdpi.value;
+            btnStart.disabled = !(dpi && dpi >= 30 && dpi <= 550);
+        } else {
+            btnStart.disabled = true;
+        }
+    }
+
+    // Process Resizing
+    btnStart.addEventListener('click', () => {
+        if (!loadedImage) return;
+
+        let targetWidth = loadedImage.naturalWidth || loadedImage.width;
+        let targetHeight = loadedImage.naturalHeight || loadedImage.height;
+
+        if (chkp.checked) {
+            let w = Math.round(parseFloat(txtuw.value));
+            let h = Math.round(parseFloat(txtuh.value));
+
+            // Bounds adjustments
+            if (w < 16) w = 16;
+            if (w > 90001) w = 90001;
+            if (h < 16) h = 16;
+            if (h > 90001) h = 90001;
+
+            txtuw.value = w;
+            txtuh.value = h;
+            targetWidth = w;
+            targetHeight = h;
+        } else if (chkdpi.checked) {
+            let dpi = Math.round(parseFloat(txtdpi.value));
+
+            // Bounds adjustments
+            if (dpi < 30) dpi = 30;
+            if (dpi > 550) dpi = 50; // Per instruction: change to 50 if greater than 550
+
+            txtdpi.value = dpi;
+            
+            // Scale logic matching custom input rules
+            const scale = dpi / 72; 
+            targetWidth = Math.round((loadedImage.naturalWidth || loadedImage.width) * scale);
+            targetHeight = Math.round((loadedImage.naturalHeight || loadedImage.height) * scale);
+        }
+
+        // Render high-quality canvas layout
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+        
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(loadedImage, 0, 0, targetWidth, targetHeight);
+
+        canvas.toBlob((blob) => {
+            if (processedBlobUrl) URL.revokeObjectURL(processedBlobUrl);
+            processedBlobUrl = URL.createObjectURL(blob);
+            btn24.style.display = 'block'; 
+        }, fileMetadata.type, 0.95);
+    });
+
+    // Handle Download Action
+    btn24.addEventListener('click', () => {
+        if (!processedBlobUrl) return;
+
+        const link = document.createElement('a');
+        link.href = processedBlobUrl;
+        link.download = `${fileMetadata.name}_resized${fileMetadata.ext}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+        // Cleanup cycle
+        imageInput3.value = '';
+        clearData();
+    });
+</script>
+
+
+</body>
+</html>
